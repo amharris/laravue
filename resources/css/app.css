@@ -1,0 +1,11 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.select2-container{
+    min-width: 70%;
+}
+
+/*.select2-search--dropdown .select2-search__field {
+    width: 60%;
+} */
