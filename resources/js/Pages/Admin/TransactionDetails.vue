@@ -17,6 +17,40 @@
                       </div>
                     </div>
                     <button @click="back()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">&lt; Back</button>
+                    
+                    <h3 class="text-3xl text-blue-500 text-bold">Ref. ID: {{ data.reference_id }}</h3>
+                    <div class="py-6 flex flex-col justify-center">
+                        <div class="grid lg:grid-cols-4 md:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-4">
+                            <div class="bg-gray-100 dark:bg-gray-800 duration-500 flex p-4">
+                                <div class="flex flex-col justify-center">
+                                    <p class="text-gray-900 dark:text-gray-300 font-bold">Recorded at</p>
+                                    <p class="text-black dark:text-gray-100 text-justify">{{ formatDate(data.created_at) }}</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-100 dark:bg-gray-800 duration-500 flex p-4">
+                                <div class="flex flex-col justify-center">
+                                    <p class="text-gray-900 dark:text-gray-300 font-bold">Status</p>
+                                    <p class="text-black dark:text-gray-100 text-justify">{{ data.status }}</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-100 dark:bg-gray-800 duration-500 flex p-4">
+                                <div class="flex flex-col justify-center">
+                                    <p class="text-gray-900 dark:text-gray-300 font-bold">Customer Name</p>
+                                    <p class="text-black dark:text-gray-100 text-justify">{{ data.user.name }}</p>
+                                </div>
+                            </div>
+
+                            <div class="bg-gray-100 dark:bg-gray-800 duration-500 flex p-4">
+                                <div class="flex flex-col justify-center">
+                                    <p class="text-gray-900 dark:text-gray-300 font-bold">Customer Email</p>
+                                    <p class="text-black dark:text-gray-100 text-justify">{{ data.user.email }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <table class="table-fixed w-full">
                         <thead>
                             <tr class="bg-gray-100">
@@ -44,7 +78,7 @@
 
 <script>
     import BreezeAuthenticatedLayout from '@/Layouts/AdminAuthenticated'
-
+    import moment from 'moment'
     import Select2 from 'vue3-select2-component'
 
     export default {
@@ -65,6 +99,10 @@
         methods: {
             back() {
                 return this.$inertia.get('/admin/transactions');
+            },
+            formatDate(datetime) {
+                moment.locale('id');
+                return moment(datetime).format("dddd, D MMMM YYYY, h:mm:ss");
             }
         }
     }
