@@ -26,7 +26,7 @@ class TransactionController extends AdminController
         return Inertia::render(
             'Admin/Transaction',
             [
-                'data' => Transaction::with('user')->with('point')->latest()->get(),
+                'data' => Transaction::with('user')->with('point')->paginate(6),
                 'customers' => User::where('is_admin', false)->take(10)->get(['id', 'name as text']),
 
             ]

@@ -29,7 +29,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(row, key) in data" :key="key">
+                            <tr v-for="(row, key) in data.data" :key="key">
                                 <td class="border px-3 py-2">{{ row.reference_id }}</td>
                                 <td class="border px-3 py-2">{{ row.user.name }}</td>
                                 <td class="border px-3 py-2">{{ currency(row.total_payment) }}</td>
@@ -42,6 +42,8 @@
                             </tr>
                         </tbody>
                     </table>
+                    <pagination class="mt-6" :links="data.links" />
+
                     <div class="fixed z-10 inset-0 overflow-y-auto ease-out duration-400" v-if="isOpen">
                       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                         
@@ -106,12 +108,13 @@
 
 <script>
     import BreezeAuthenticatedLayout from '@/Layouts/AdminAuthenticated'
-
+    import Pagination from '@/Components/Pagination'
     import Select2 from 'vue3-select2-component'
 
     export default {
         components: {
             BreezeAuthenticatedLayout,
+            Pagination,
             Select2,
         },
         props: ['data', 'errors', 'customers'],
