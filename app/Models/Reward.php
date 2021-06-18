@@ -18,4 +18,9 @@ class Reward extends Model
     {
         return $this->hasMany(RewardRedeem::class);
     }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'reward_redeems');
+    }
 }

@@ -50,7 +50,7 @@ class User extends Authenticatable
 
     public function transaction()
     {
-        return $this->hasMany(Transactions::class);
+        return $this->hasMany(Transaction::class);
     }
 
     public function bag()
@@ -61,5 +61,17 @@ class User extends Authenticatable
     public function latestBag()
     {
         return $this->hasOne(TransactionBag::class)->latestOfMany()->first();
+    }
+
+    public function points()
+    {
+        return $this->belongsToMany(RewardPoint::class, 'transactions', 'user_id', 'point_id')
+            ->sum('point');
+    }
+
+    public function rewards()
+    {
+        return $this->belongsToMany(Reward::class, 'reward_redeems', 'user_id', 'reward_id')
+            ->withPivot('by_admin')->withTimestamps();
     }
 }
