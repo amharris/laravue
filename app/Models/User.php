@@ -57,4 +57,9 @@ class User extends Authenticatable
     {
         return $this->hasOne(TransactionBag::class);
     }
+
+    public function latestBag()
+    {
+        return $this->hasOne(TransactionBag::class)->latestOfMany()->first();
+    }
 }

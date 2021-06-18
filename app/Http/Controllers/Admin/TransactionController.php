@@ -54,6 +54,8 @@ class TransactionController extends AdminController
         if (empty($bag)) {
             $user = User::findOrFail($cust);
             $user->bag()->create(['total_payment' => 0]);
+
+            $bag = $user->latestBag();
         } else {
             $bagitems = $bag->items()->get();
 
