@@ -22,7 +22,7 @@ class UserAdministrationController extends AdminController
         return Inertia::render(
             'Admin/UserAdministration',
             [
-                'data' => User::where('is_admin', false)->get(['id', 'name', 'email'])
+                'data' => User::where('is_admin', false)->select(['id', 'name', 'email', 'points'])->paginate(6),
             ]
         );
     }
@@ -83,8 +83,8 @@ class UserAdministrationController extends AdminController
         try {
             $user->delete();
         } catch (Exception $e) {
-            redirect()->back()
-                ->with('errors', 'Somethings went wrong.');
+            return redirect()->back()
+                ->with('errors', 'Somethings went wrong: ' . $e->getMessage());
         }
         return redirect()->back()
             ->with('message', 'User successfully deleted.');

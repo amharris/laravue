@@ -17,20 +17,22 @@
                       </div>
                     </div>
                     <button @click="openModal()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded my-3">Add New User</button>
-                    <table class="table-fixed w-full">
+                    <table class="table-auto w-full">
                         <thead>
                             <tr class="bg-gray-100">
                                 <th class="px-3 py-2 w-20">ID</th>
                                 <th class="px-3 py-2">Name</th>
                                 <th class="px-3 py-2">Email</th>
+                                <th class="px-3 py-2">Points</th>
                                 <th class="px-3 py-2">Action</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(row, key) in data" :key="key">
+                            <tr v-for="(row, key) in data.data" :key="key">
                                 <td class="border px-3 py-2">{{ row.id }}</td>
                                 <td class="border px-3 py-2">{{ row.name }}</td>
                                 <td class="border px-3 py-2">{{ row.email }}</td>
+                                <td class="border px-3 py-2">{{ row.points }}</td>
                                 <td class="border px-3 py-2">
                                     <button @click="edit(row)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
                                     <button @click="deleteRow(row)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
@@ -38,6 +40,8 @@
                             </tr>
                         </tbody>
                     </table>
+                    <pagination class="mt-6" :links="data.links" />
+
                     <div class="fixed z-10 inset-0 overflow-y-auto ease-out duration-400" v-if="isOpen">
                       <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
                         
@@ -66,6 +70,11 @@
                                       <input type="password" :disabled="editMode" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="userPassword" v-model="form.password">
                                       <div v-show="editMode" class="text">Password cannot be changed</div>
                                       <div v-if="$page.props.errors.password" class="text-red-500">{{ $page.props.errors.password[0] }}</div>
+                                  </div>
+                                  <div class="mb-4" v-show="editMode">
+                                      <label for="userPoints" class="block text-gray-700 text-sm font-bold mb-2">Points:</label>
+                                      <input type="number" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" id="userPoints" v-model="form.points">
+                                      <div v-if="$page.props.errors.points" class="text-red-500">{{ $page.props.errors.points[0] }}</div>
                                   </div>
                             </div>
                           </div>
@@ -102,10 +111,12 @@
 
 <script>
     import BreezeAuthenticatedLayout from '@/Layouts/AdminAuthenticated'
+    import Pagination from '@/Components/Pagination'
 
     export default {
         components: {
             BreezeAuthenticatedLayout,
+            Pagination
         },
         props: ['data', 'errors'],
         data() {
@@ -125,7 +136,7 @@
             },
             closeModal() {
                 this.isOpen = false;
-                // this.reset();
+                this.reset();
                 this.editMode=false;
             },
             reset() {
