@@ -26,7 +26,7 @@ class TransactionController extends AdminController
         return Inertia::render(
             'Admin/Transaction',
             [
-                'data' => Transaction::with('user')->with('point')->paginate(6),
+                'data' => Transaction::with('user')->with('point')->orderBy('created_at', 'DESC')->paginate(6),
                 'customers' => User::where('is_admin', false)->take(10)->get(['id', 'name as text']),
 
             ]
@@ -71,11 +71,6 @@ class TransactionController extends AdminController
 
         return Inertia::render('Admin/TransactionNew',
         [
-            // 'customers' => User::where('is_admin', false)->get(['id', 'name as text']),
-            // 'cart' => [
-                // ['id'=> null, 'name'=>'-- Add new item --', 'quantity'=>0, 'price'=>0, 'subtotal'=>0] 
-            // ],
-
             'cart' => $bag,
             'items' => $items,
             'customer' => User::findOrFail($cust),
@@ -152,7 +147,14 @@ class TransactionController extends AdminController
      */
     public function update(Request $request, Transaction $transaction)
     {
-        //
+        try {
+            $transaction->update(['status' => $request->post('status')]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return back()->withErrors('Something bad happened: ' . $th->getMessage());
+        }
+
+        return redirect()->route('transactions.index');
     }
 
     /**
