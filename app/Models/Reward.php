@@ -21,6 +21,6 @@ class Reward extends Model
 
     public function users()
     {
-        return $this->belongsToMany(User::class, 'reward_redeems');
+        return $this->hasManyThrough(User::class, RewardRedeem::class, 'reward_id', 'id', 'id', 'user_id');
     }
 }

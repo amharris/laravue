@@ -132,7 +132,6 @@
     import NProgress from 'nprogress'
     import { useForm } from '@inertiajs/inertia-vue3'
     import { InertiaProgress } from '@inertiajs/progress'
-    import { Inertia } from '@inertiajs/inertia'
 
     InertiaProgress.init({delay: 250})
     
@@ -162,14 +161,12 @@
                         dataType: "json",
                         delay: 300,
                         data: function(params) {
-                            // console.log(params)
                             return {
                                 term: params.term,
                                 page: 1
                             };
                         },
                         processResults: function(data) {
-                            // console.log(data)
                             return {
                                 results: data.results.map( function({ id, name: text, price }) { 
                                     return {id, text, price};
@@ -211,7 +208,6 @@
         methods: {
             cartLineTotal(item) {
                 let amount = item.price * item.quantity;
-                // amount = (amount / 100);
 
                 return amount.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
             },
@@ -232,7 +228,6 @@
                 }
             },
             getProduct(event) {
-                // console.log(event);
                 this.item.id = event.id,
                 this.item.name = event.text;
                 this.item.quantity = 1;
@@ -262,25 +257,22 @@
                 this.closeModal();
             },
             removeFromCart(index, item) {
-                axios.delete('/admin/bags/'+this.cart.id, {data: item});
+                return axios.delete('/admin/bags/'+this.cart.id, {data: item});
                 this.$page.props.items.splice(index, 1);
             },
             async saveRow(item) {
-                axios.post('/admin/bags', {cart: this.cart.id, item: item})
+                return axios.post('/admin/bags', {cart: this.cart.id, item: item})
                     .then(function(res){
                         return true;
 
-                        // console.log(res);
                     }).catch(function(error){
                         return false;
-                        // console.log(error.response);
                     });
             },
             updateCart(cart) {
                 this.$page.props.items = cart;
             },
             processPayment() {
-                // console.log('submitted')
 
                 var trx = {
                     customer: this.$page.props.customer,
@@ -292,49 +284,15 @@
                 this.paymentProcessing = true;
                 this.$inertia.post('/admin/transactions', trx);
             }
-            // async processPayment() {
-            //     this.paymentProcessing = true;
 
-
-            //     if (error) {
-            //         this.paymentProcessing = false;
-            //         console.error(error);
-            //     } else {
-            //         console.log(paymentMethod);
-            //         this.customer.payment_method_id = paymentMethod.id;
-            //         this.customer.amount = this.$store.state.cart.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-            //         this.customer.cart = JSON.stringify(this.$store.state.cart);
-
-            //         axios.post('/api/purchase', this.customer)
-            //             .then((response) => {
-            //                 this.paymentProcessing = false;
-            //                 console.log(response);
-
-            //                 this.$store.commit('updateOrder', response.data);
-            //                 this.$store.dispatch('clearCart');
-
-            //                 this.$router.push({ name: 'order.summary' });
-            //             })
-            //             .catch((error) => {
-            //                 this.paymentProcessing = false;
-            //                 console.error(error);
-            //             });
-            //     }
-            // }
         },
         computed: {
-            // cart() {
-            //     // console.log(this.$page.props.cart)
-            //     return this.$page.props.cart;
-            // },
             cartQuantity() {
                 return this.$page.props.items.reduce((acc, item) => acc + item.quantity, 0);
             },
             cartTotal() {
                 let amount = this.$page.props.items.reduce((acc, item) => acc + (item.price * item.quantity), 0);
-                // amount = (amount / 100);
                 return amount;
-                // return amount.toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
             },
             subtotalItem() {
                 return this.item.quantity * this.item.price;

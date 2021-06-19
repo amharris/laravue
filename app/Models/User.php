@@ -43,11 +43,6 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function reward()
-    {
-        return $this->hasMany(RewardRedeem::class);
-    }
-
     public function transaction()
     {
         return $this->hasMany(Transaction::class);
@@ -63,15 +58,20 @@ class User extends Authenticatable
         return $this->hasOne(TransactionBag::class)->latestOfMany()->first();
     }
 
-    public function points()
+    public function allPoints()
     {
-        return $this->belongsToMany(RewardPoint::class, 'transactions', 'user_id', 'point_id')
-            ->sum('point');
+        return $this->belongsToMany(RewardPoint::class, 'transactions', 'user_id', 'point_id');
+            
+    }
+
+    public function redeems()
+    {
+        return $this->hasMany(RewardRedeem::class);
     }
 
     public function rewards()
     {
-        return $this->belongsToMany(Reward::class, 'reward_redeems', 'user_id', 'reward_id')
-            ->withPivot('by_admin')->withTimestamps();
+        return $this->hasManyThrough(Reward::class, RewardRedeem::class, 'user_id', 'id', 'id', 'reward_id');
+            
     }
 }

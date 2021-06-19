@@ -24,6 +24,7 @@
                                 <th class="px-3 py-2">Name</th>
                                 <th class="px-3 py-2">Email</th>
                                 <th class="px-3 py-2">Points</th>
+                                <th class="px-3 py-2">Rewards</th>
                                 <th class="px-3 py-2">Action</th>
                             </tr>
                         </thead>
@@ -33,6 +34,9 @@
                                 <td class="border px-3 py-2">{{ row.name }}</td>
                                 <td class="border px-3 py-2">{{ row.email }}</td>
                                 <td class="border px-3 py-2">{{ row.points }}</td>
+                                <td class="border px-3 py-2">
+                                    {{ row.rewards_count }} <a href="#" @click.prevent="showRewards(row.id)" :class="`${row.rewards_count ? 'hover:bg-green-400 bg-green-300' : 'bg-gray-200'}`" class="float-right px-3 py-1 rounded">View</a>
+                                </td>
                                 <td class="border px-3 py-2">
                                     <button @click="edit(row)" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Edit</button>
                                     <button @click="deleteRow(row)" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">Delete</button>
@@ -101,6 +105,47 @@
                         </div>
                       </div>
                     </div>
+                    <div class="fixed z-10 inset-0 overflow-y-auto ease-out duration-400" v-if="isDetailOpen">
+                      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        
+                        <div class="fixed inset-0 transition-opacity">
+                          <div class="absolute inset-0 bg-gray-500 opacity-75"></div>
+                        </div>
+                      
+                        <span class="hidden sm:inline-block sm:align-middle sm:h-screen"></span>​
+                        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full" role="dialog" aria-modal="true" aria-labelledby="modal-headline">
+                          <div class="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                            <div class="">
+                            <table class="table-auto w-full">
+                                <thead>
+                                    <tr class="bg-gray-100">
+                                        <th class="px-3 py-2">Reward</th>
+                                        <th class="px-3 py-2">Point Redeemed</th>
+                                        <th class="px-3 py-2">Redeemed at</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="redeem in detailReward" :key="redeem.id">
+                                        <td class="border px-3 py-2">{{ redeem.reward.name }}</td>
+                                        <td class="border px-3 py-2">{{ redeem.reward.point_min }}</td>
+                                        <td class="border px-3 py-2">{{ formatDate(redeem.created_at) }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                          </div>
+                          <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                
+                            <span class="mt-3 flex w-full rounded-md shadow-sm sm:mt-0 sm:w-auto">
+                              
+                              <button @click="closeModal()" type="button" class="inline-flex justify-center w-full rounded-md border border-gray-300 px-4 py-2 bg-white text-base leading-6 font-medium text-gray-700 shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue transition ease-in-out duration-150 sm:text-sm sm:leading-5">
+                                OK
+                              </button>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -111,7 +156,13 @@
 
 <script>
     import BreezeAuthenticatedLayout from '@/Layouts/AdminAuthenticated'
+    import { InertiaProgress } from '@inertiajs/progress'
     import Pagination from '@/Components/Pagination'
+    import NProgress from 'nprogress'
+    import moment from 'moment'
+    import axios from 'axios'
+
+    InertiaProgress.init({delay: 250})
 
     export default {
         components: {
@@ -123,11 +174,18 @@
             return {
                 editMode: false,
                 isOpen: false,
+                isDetailOpen: false,
+                userId: null,
                 form: {
                     name: null,
                     email: null,
                     password: null
                 },
+                rewardDetails: this.data.data.reduce(
+                    (acc, cur) => (
+                        { ...acc, [cur.id]: cur.rewards_count }
+                        ), {}
+                    )
             }
         },
         methods: {
@@ -136,8 +194,10 @@
             },
             closeModal() {
                 this.isOpen = false;
+                this.isDetailOpen = false;
                 this.reset();
                 this.editMode=false;
+                this.userId = null;
             },
             reset() {
                 this.form = {
@@ -170,6 +230,57 @@
                 this.reset();
                 this.closeModal();
             },
+            async getRewards(id){
+                return axios.get('/admin/users/' + id + '/rewards')
+                    .then(function(res) {
+                        return res.data;
+                    });
+            },
+            showRewards(user_id){
+                if (this.rewardDetails[user_id] !== 0) {
+                    if (typeof this.rewardDetails[user_id] !== "object") {
+                        this.getRewards(user_id)
+                            .then( data => {
+                                this.$data.rewardDetails[user_id] = data;
+                                return data;
+                            });
+                        
+                    }
+
+                    this.isDetailOpen = true;
+                    this.userId = user_id;
+                }
+            },
+            formatDate(datetime) {
+                moment.locale('id');
+                return moment(datetime).format("dddd, D MMMM YYYY, HH:mm:ss");
+            }
+        },
+        computed: {
+            detailReward() {
+                // return this.rewardDetails;
+                const filtered = Object.assign({}, ...[this.userId].map(key=> ({[key]:this.rewardDetails[key]})));
+                return filtered[this.userId];
+            }
+        },
+        setup () {
+            const reqIntercept = axios.interceptors.request.use(function(config) {
+                NProgress.start();
+                return config;
+            }, function(error) {
+                console.log('Error');
+                return Promise.reject(error);
+            });
+
+            const resIntercept = axios.interceptors.response.use(function(response) {
+                NProgress.done();
+                return response;
+            }, function(error) {
+                console.log('Error fetching the data');
+                return Promise.reject(error);
+            });
+
+            return { resIntercept, reqIntercept }
         },
     }
 </script>

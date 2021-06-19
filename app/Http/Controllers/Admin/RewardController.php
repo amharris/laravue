@@ -4,7 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Reward;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,7 +21,8 @@ class RewardController extends AdminController
         return Inertia::render(
             'Admin/Reward',
             [
-                'data' => $reward->latest()->get()
+                'data' => $reward->withcount('redeems')->get(),
+                'customers' => User::where('is_admin', false)->get(['id', 'name','points']),
             ]
         );
     }
@@ -79,10 +81,29 @@ class RewardController extends AdminController
             $reward->delete();
         } catch (\Throwable $th) {
             //throw $th;
-            redirect()->back()
-            ->with('errors', 'Somethings went wrong.');
+            return redirect()->back()
+            ->with('errors', 'Somethings went wrong: ' . $th->getMessage());
         }
         return redirect()->back()
             ->with('message', 'Reward successfully deleted.');
+    }
+
+
+    public function redeem(Request $request)
+    {
+        if ($request->has(['reward_id', 'user_id'])) {
+            $user = User::findOrFail($request->post('user_id'));
+            // $user->rewards()->attach($request->post('reward_id'), ['by_admin' => true]);
+            $user->redeems()->firstOrNew([
+                'reward_id' => $request->post('reward_id'),
+                'by_admin' => true,
+            ])->save();
+        }
+        // Log::info(print_r($request->post(), true));
+        return redirect()->back()
+            ->with(
+                'message',
+                'Successfully redeem reward points!'
+            );
     }
 }

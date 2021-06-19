@@ -28,6 +28,12 @@ Route::get('/', function () {
 Route::get('/dashboard', [\App\Http\Controllers\UserController::class, 'dashboard'])
     ->middleware(['auth', 'verified'])->name('dashboard');
 
+// Route::get('/redeem', [\App\Http\Controllers\UserController::class, 'redeem'])
+//     ->middleware(['auth', 'verified'])->name('redeem');
+
+Route::post('/redeem/{reward}', [\App\Http\Controllers\UserController::class, 'redeem'])
+    ->middleware(['auth', 'verified'])->name('redeem.reward');
+
 
 Route::prefix('admin')->group(function() {
     Route::get('dashboard', [\App\Http\Controllers\Admin\DashboardController::class, 'adminDash'])
@@ -50,6 +56,12 @@ Route::prefix('admin')->group(function() {
 
     Route::match(['get', 'post'], 'transactions/create', [\App\Http\Controllers\Admin\TransactionController::class, 'create'])
         ->name('transactions.create');
+
+    Route::post('rewards/redeem', [\App\Http\Controllers\Admin\RewardController::class, 'redeem'])
+        ->name('rewards.redeem');
+
+    Route::get('users/{user}/rewards', [\App\Http\Controllers\Admin\UserAdministrationController::class, 'rewards'])
+        ->name('users.rewards');
 });
 
 require __DIR__.'/auth.php';

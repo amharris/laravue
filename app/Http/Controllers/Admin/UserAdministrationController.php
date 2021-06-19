@@ -22,7 +22,10 @@ class UserAdministrationController extends AdminController
         return Inertia::render(
             'Admin/UserAdministration',
             [
-                'data' => User::where('is_admin', false)->select(['id', 'name', 'email', 'points'])->paginate(6),
+                'data' => User::where('is_admin', false)
+                    ->select(['id', 'name', 'email', 'points'])
+                    ->withcount('rewards')
+                    ->paginate(6)
             ]
         );
     }
@@ -88,5 +91,11 @@ class UserAdministrationController extends AdminController
         }
         return redirect()->back()
             ->with('message', 'User successfully deleted.');
+    }
+
+    public function rewards(User $user)
+    {
+        // $rewards = $user->rewards;
+        return response()->json($user->redeems()->with('reward')->get());
     }
 }

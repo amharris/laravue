@@ -102,7 +102,7 @@
             },
             formatDate(datetime) {
                 moment.locale('id');
-                return moment(datetime).format("dddd, D MMMM YYYY, h:mm:ss");
+                return moment(datetime).format("dddd, D MMMM YYYY, HH:mm:ss");
             }
         }
     }

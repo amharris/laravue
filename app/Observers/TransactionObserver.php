@@ -22,11 +22,9 @@ class TransactionObserver
      */
     public function created(Transaction $transaction)
     {
-        $user = User::find($transaction->user_id);
-        $points = $user->points;
-        $newPoints = (int)$points + (int)$transaction->point->point;
+        $user = User::findOrFail($transaction->user_id);
 
-        $user->points = $newPoints;
+        $user->points += (int)$transaction->point->point;
         $user->save();
     }
 
