@@ -61,20 +61,18 @@ class UserController extends Controller
     /**
      * Redeem page
      * 
+     * @param \Illuminate\Http\Request $request
      * @param \App\Models\Reward $reward
+     * @return \Illuminate\Contracts\Support\Renderable
      */
     public function redeem(Request $request, Reward $reward)
     {
         if ($request->has('user') && $request->post('user') == $this->user->id) {
 
-            $redeem = $this->user->redeems()->create([
+            $this->user->redeems()->create([
                 'reward_id' => $reward->id,
                 'by_admin' => false,
-            ]);
-            // if ($redeem) {
-            //     return redirect()->route('dashboard')->withErrors('You have redeemed it.');
-            // }
-            $redeem->save();
+            ])->save();
         }
         return Inertia::render(
             'Redeem',

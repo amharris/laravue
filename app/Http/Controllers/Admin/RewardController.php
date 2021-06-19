@@ -93,8 +93,7 @@ class RewardController extends AdminController
     {
         if ($request->has(['reward_id', 'user_id'])) {
             $user = User::findOrFail($request->post('user_id'));
-            // $user->rewards()->attach($request->post('reward_id'), ['by_admin' => true]);
-            $user->redeems()->firstOrNew([
+            $user->redeems()->create([
                 'reward_id' => $request->post('reward_id'),
                 'by_admin' => true,
             ])->save();
