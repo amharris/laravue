@@ -48,11 +48,11 @@ Route::prefix('admin')->group(function() {
         'users' => \App\Http\Controllers\Admin\UserAdministrationController::class,
     ]);
 
-    Route::resource('transactions', \App\Http\Controllers\Admin\TransactionController::class)
-        ->except('create');
-
     Route::match(['get', 'post'], 'transactions/create', [\App\Http\Controllers\Admin\TransactionController::class, 'create'])
         ->name('transactions.create');
+
+    Route::resource('transactions', \App\Http\Controllers\Admin\TransactionController::class)
+        ->except('create');
 
     Route::post('rewards/redeem', [\App\Http\Controllers\Admin\RewardController::class, 'redeem'])
         ->name('rewards.redeem');

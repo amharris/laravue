@@ -41,10 +41,18 @@ class TransactionController extends AdminController
      */
     public function create(Request $request)
     {
-        $cust = $request->post('user_id');
+        // Log::info(print_r($request->session()->all(), true));
+        if ($request->isMethod('post')) {
+            $cust = $request->post('user_id');
+        } else {
+            $cust = $request->session()->get('user_id');
+        }
+
         if (!$cust) {
             return redirect()->route('transactions.index')->with('message', 'Select User first');
         }
+        $request->session()->put('user_id', $cust);
+
         $items = [];
         $bag = TransactionBag::where('user_id', $cust)
             ->where('submitted', false)
@@ -67,7 +75,6 @@ class TransactionController extends AdminController
                 $items[$key]['subtotal'] = $item->pivot->total_price;
             }
         }
-        // Log::info(print_r(User::findOrFail($cust)->toArray(), true));
 
         return Inertia::render('Admin/TransactionNew',
         [
@@ -100,8 +107,6 @@ class TransactionController extends AdminController
      */
     public function store(Request $request)
     {
-        // Log::info(print_r($request->post(), true));
-
         if ($request->has(['customer', 'cart', 'rewardpoint', 'total'])) {
             $trxData = $request->post();
 
@@ -132,6 +137,8 @@ class TransactionController extends AdminController
 
             $bag->submitted = true;
             $bag->save();
+
+            $request->session()->forget('user_id');
         }
 
         return redirect()->route('transactions.index');
