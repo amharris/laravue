@@ -28,9 +28,6 @@ Route::get('/', function () {
 Route::get('/dashboard', [\App\Http\Controllers\UserController::class, 'dashboard'])
     ->middleware(['auth', 'verified'])->name('dashboard');
 
-// Route::get('/redeem', [\App\Http\Controllers\UserController::class, 'redeem'])
-//     ->middleware(['auth', 'verified'])->name('redeem');
-
 Route::post('/redeem/{reward}', [\App\Http\Controllers\UserController::class, 'redeem'])
     ->middleware(['auth', 'verified'])->name('redeem.reward');
 

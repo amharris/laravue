@@ -68,6 +68,12 @@
                                 <td class="border px-3 py-2">{{ row.total_price }}</td>
                             </tr>
                         </tbody>
+                        <tfoot>
+                            <tr class="bg-gray-100">
+                                <th class="border px-3 py-2 text-right" colspan="3">Total</th>
+                                <th class="border px-3 py-2">{{ formatCurrency(data.total_payment) }}</th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
@@ -98,12 +104,15 @@
         },
         methods: {
             back() {
-                return this.$inertia.get('/admin/transactions');
+                window.history.back();;
             },
             formatDate(datetime) {
                 moment.locale('id');
                 return moment(datetime).format("dddd, D MMMM YYYY, HH:mm:ss");
-            }
+            },
+            formatCurrency(amount) {
+                return parseFloat(amount).toLocaleString('id-ID', { style: 'currency', currency: 'IDR' });
+            },
         }
     }
 </script>

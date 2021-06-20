@@ -87,9 +87,8 @@ class TransactionController extends AdminController
      */
     public function show(Transaction $transaction)
     {
-        // return response()->json($transaction->get());
         return Inertia::render('Admin/TransactionDetails',[
-            'data' => $transaction->with('detail.items')->with('user')->with('point')->first()
+            'data' => $transaction->load('detail.items', 'user', 'point'),
         ]);
     }
 
