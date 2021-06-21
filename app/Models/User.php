@@ -6,10 +6,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -61,7 +62,6 @@ class User extends Authenticatable
     public function allPoints()
     {
         return $this->belongsToMany(RewardPoint::class, 'transactions', 'user_id', 'point_id');
-            
     }
 
     public function redeems()
@@ -72,6 +72,5 @@ class User extends Authenticatable
     public function rewards()
     {
         return $this->hasManyThrough(Reward::class, RewardRedeem::class, 'user_id', 'id', 'id', 'reward_id');
-            
     }
 }

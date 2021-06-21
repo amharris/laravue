@@ -17,3 +17,13 @@ use Illuminate\Support\Facades\Route;
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+Route::post('/tokens/create', [\App\Http\Controllers\Api\AuthController::class, 'token']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/me', [\App\Http\Controllers\Api\UserController::class, 'me']);
+    Route::get('/rewards', [\App\Http\Controllers\Api\UserController::class, 'rewards']);
+    Route::post('/redeem/{reward}', [\App\Http\Controllers\Api\UserController::class, 'redeem']);
+
+    Route::post('/logout', [\App\Http\Controllers\Api\AuthController::class, 'logout']);
+});
