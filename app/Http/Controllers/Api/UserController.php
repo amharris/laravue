@@ -18,7 +18,10 @@ class UserController extends Controller
     {
         $user = $request->user();
 
-        $rewards = Reward::where('point_min', '<=', $user->points)->get(['name', 'point_min', 'id']);
+        $rewards = [];
+        if ($user->points) {
+            $rewards = Reward::where('point_min', '<=', $user->points)->get(['name', 'point_min', 'id']);
+        }
 
         return [
             'points' => $user->points,
