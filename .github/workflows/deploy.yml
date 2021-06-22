@@ -75,7 +75,6 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           ssh-known-hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-          deployer-skip-install: false
           deployer-version: ^7.0
       - name: Deploy to PRODUCTION Server
         env:
