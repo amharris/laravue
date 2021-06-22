@@ -1,9 +1,28 @@
 # Laravue
 
+![Deploy workflow badge](https://github.com/baddwin/laravue/actions/workflows/deploy.yml/badge.svg)
+
 ## About Laravue
 
 Laravue is a web application built with latest Laravel framework to date (v8) with
 Laravel Breeze package and Inertia JS, which powered by Vue JS 3 and Tailwind CSS.
+
+For Sail users, the `docker-compose.yml` file has been customized
+to be used with [Podman](https://podman.io) and [Podman Compose](https://github.com/containers/podman-compose).
+Just `cd` to clone directory of this repo, then run command:
+
+    podmain-compose up
+
+The change is just in the `laravel.test` service section:
+
+    volumes:
+            - '.:/var/www/html:z'
+
+The bound volume need to be aded `:z` in order that Podman has read-write acces to host filesystem.
+
+To access shell inside Podman, run this command:
+
+    podman exec -it laravue_laravel.test_1 /bin/bash
 
 ## REST API Documentation
 

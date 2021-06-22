@@ -30,6 +30,8 @@ add('rsync', [
         '/node_modules/',
         '.github',
         'deploy.php',
+        'ER.png',
+        'laravue_20210619_223709.sql',
     ],
 ]);
 
