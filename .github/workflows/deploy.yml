@@ -64,12 +64,14 @@ jobs:
           name: assets
           path: public
       - name: Setup PHP
-        uses: shivammathur/setup-php@master
+        uses: shivammathur/setup-php@2.11.0
         with:
           php-version: 8.0
           extensions: mbstring, bcmath
       - name: Composer install
-        run: composer install -q --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        run: composer install --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+      - name: Check Deployer exists
+        run: ls -R vendor/bin
       - name: Deploy to PRODUCTION Server
         uses: deployphp/action@master
         with:
