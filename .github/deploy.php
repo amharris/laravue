@@ -35,7 +35,7 @@ add('rsync', [
 
 task('deploy:secrets', function () {
     file_put_contents(__DIR__ . '/.env', getenv('DOT_ENV'));
-    upload('.env', get('deploy_path') . '/shared');
+    upload(__DIR__ . '/.env', get('deploy_path') . '/shared');
 });
 
 after('deploy:failed', 'deploy:unlock');
