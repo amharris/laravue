@@ -69,14 +69,14 @@ jobs:
           php-version: 8.0
           extensions: mbstring, bcmath
       - name: Composer install
-        run: composer install --no-ansi --no-interaction --no-scripts --no-suggest --no-progress --prefer-dist
+        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Check Deployer exists
-        run: ls -R vendor/bin
+        run: ls -R vendor/bin | grep dep
       - name: Deploy to PRODUCTION Server
         uses: deployphp/action@master
         with:
           private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           known-hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-          dep: deploy production --tag=${{ env.GITHUB_REF }} -vvv
+          dep: deploy production -vvv
         env:
           DOT_ENV: ${{ secrets.DOT_ENV_PROD }}
