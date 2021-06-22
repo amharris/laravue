@@ -53,7 +53,7 @@ jobs:
 
   deploy-production:
     name: Deploy and release to PROD Server
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-latest
     needs: [build-js-production, app-tests]
     if: github.ref == 'refs/heads/main'
     steps:
@@ -66,8 +66,8 @@ jobs:
       - name: Setup PHP
         uses: shivammathur/setup-php@2.11.0
         with:
-          php-version: 8.0
-          extensions: mbstring, bcmath
+          php-version: '8.0'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
       - name: Composer install
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Check Deployer exists
@@ -77,6 +77,6 @@ jobs:
         with:
           private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           known-hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-          dep: deploy production -vvv
+          dep: deploy production -f .github/deploy.php -vvv
         env:
           DOT_ENV: ${{ secrets.DOT_ENV_PROD }}
