@@ -79,7 +79,7 @@ jobs:
         with:
           private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           known-hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-          dep: deploy production -f .github/deploy.php -vv --revision ${{ env.GITHUB_SHA }} --tag ${{ env.GITHUB_REF }}
+          dep: deploy production -f .github/deploy.php -vv --revision $GITHUB_SHA --tag $GITHUB_REF
         env:
           DOT_ENV: ${{ secrets.DOT_ENV_PROD }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
