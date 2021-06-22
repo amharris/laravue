@@ -12,6 +12,12 @@ set('rsync_src', function () {
     return __DIR__;
 });
 
+host('production')
+  ->setHostname(getenv('SSH_HOST'))
+  ->setPort(getenv('SSH_PORT'))
+  ->setTag('production')
+  ->setRemoteUser(getenv('SSH_USER'))
+  ->setDeployPath(getenv('DEPLOY_PATH'));
 
 add('rsync', [
     'exclude' => [
@@ -27,15 +33,8 @@ add('rsync', [
 
 task('deploy:secrets', function () {
     file_put_contents(__DIR__ . '/.env', getenv('DOT_ENV'));
-    upload('.env', get('deploy_path') . '/shared');
+    upload('.env', get('deploy_path'));
 });
-
-host('production')
-  ->setHostname(getenv('SSH_HOST'))
-  ->setPort(getenv('SSH_PORT'))
-  ->setTag('production')
-  ->setRemoteUser(getenv('SSH_USER'))
-  ->setDeployPath(getenv('DEPLOY_PATH'));
 
 after('deploy:failed', 'deploy:unlock');
 
