@@ -80,3 +80,7 @@ jobs:
           dep: deploy production -f .github/deploy.php -vvv
         env:
           DOT_ENV: ${{ secrets.DOT_ENV_PROD }}
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_PORT: ${{ secrets.SSH_PORT }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
