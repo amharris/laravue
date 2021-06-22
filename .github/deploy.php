@@ -7,6 +7,7 @@ require 'recipe/laravel.php';
 require 'contrib/rsync.php';
 
 set('application', 'Laravel App');
+set('repository', 'https://github.com/baddwin/laravue.git');
 set('ssh_multiplexing', true);
 
 set('rsync_src', function () {
