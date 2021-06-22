@@ -73,7 +73,7 @@ jobs:
       - name: Check Deployer exists
         run: ls -R vendor/bin | grep dep
       - name: Deploy to PRODUCTION Server
-        uses: deployphp/action@master
+        uses: FalahDev/action@master
         with:
           private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           known-hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
