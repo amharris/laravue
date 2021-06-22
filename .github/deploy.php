@@ -11,7 +11,7 @@ set('repository', 'https://github.com/baddwin/laravue.git');
 set('ssh_multiplexing', true);
 
 set('rsync_src', function () {
-    return __DIR__;
+    return getenv('GITHUB_WORKSPACE');
 });
 
 host('production')
