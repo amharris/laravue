@@ -18,6 +18,7 @@
         "wulfheart/pretty_routes": "^0.3.0"
     },
     "require-dev": {
+        "deployer/deployer": "^7.0",
         "facade/ignition": "^2.5",
         "fakerphp/faker": "^1.9.1",
         "laravel/breeze": "^1.3",
