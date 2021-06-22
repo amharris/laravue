@@ -38,6 +38,13 @@ task('deploy:secrets', function () {
     upload(__DIR__ . '/.env', get('deploy_path') . '/shared');
 });
 
+task('deploy:prepare', [
+    'deploy:info',
+    'deploy:setup',
+    'deploy:lock',
+    'deploy:release',
+]);
+
 after('deploy:failed', 'deploy:unlock');
 
 desc('Deploy the application');
@@ -47,6 +54,7 @@ task('deploy', [
     'deploy:prepare',
     'rsync',
     'deploy:secrets',
+    'deploy:shared',
     'deploy:vendors',
     'deploy:writable',
     'artisan:storage:link',
