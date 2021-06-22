@@ -24,6 +24,8 @@ To access shell inside Podman, run this command:
 
     podman exec -it laravue_laravel.test_1 /bin/bash
 
+*Sample deployment website is [in here](http://laravue.badwi.my.id/).*
+
 ## REST API Documentation
 
 ### POST `{{laravel_host}}/api/token/create`
