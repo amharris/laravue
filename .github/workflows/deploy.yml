@@ -69,7 +69,7 @@ jobs:
           php-version: '8.0'
           extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
       - name: Composer install
-        run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+        run: composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Check Deployer exists
         run: ls -R vendor/bin | grep dep
       - name: Deploy to PRODUCTION Server
