@@ -72,14 +72,12 @@ jobs:
         run: composer install --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
       - name: Check Deployer exists
         run: ls -R vendor/bin | grep dep
-      - name: Debug env vars
-        run: env
       - name: Deploy to PRODUCTION Server
         uses: FalahDev/action@master
         with:
           private-key: ${{ secrets.SSH_PRIVATE_KEY }}
           known-hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
-          dep: deploy production -f .github/deploy.php -vv --revision $GITHUB_SHA --tag $GITHUB_REF
+          dep: deploy production -f .github/deploy.php -vv --revision ${{ github.sha }} --tag ${{ github.ref }}
         env:
           DOT_ENV: ${{ secrets.DOT_ENV_PROD }}
           SSH_HOST: ${{ secrets.SSH_HOST }}
