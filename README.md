@@ -6,16 +6,20 @@
 
 Laravue is a web application built with latest Laravel framework to date (v8) with
 Laravel Breeze package and Inertia JS, which powered by Vue JS 3 and Tailwind CSS.
+Other libraries are used as well, such as Select2 jQuery plugin, etc.
+
+  >  *Disclaimer:* there is no correlation with [other Laravue](https://doc.laravue.dev) project.
+  >  This name was chosen arbitrarily when creating repo in Github.
 
 For Sail users, the `docker-compose.yml` file has been customized
 to be used with [Podman](https://podman.io) and [Podman Compose](https://github.com/containers/podman-compose).
 Just `cd` to clone directory of this repo, then run command:
 
-    podmain-compose up
+    podman-compose up
 
 The change is just in the `laravel.test` service section:
 
-    volumes:
+            volumes:
             - '.:/var/www/html:z'
 
 The bound volume need to be aded `:z` in order that Podman has read-write acces to host filesystem.
